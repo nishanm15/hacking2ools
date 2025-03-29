@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Security 2ools Dashboard</title>
+    <!-- React, ReactDOM, Babel CDNs -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google Fonts (Inter & Fira Code) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Global Styles & "Midnight Blue" Dark Theme Variables --- */
+        :root {
+            --bg-primary: #111827; /* Very Dark Blue-Gray */
+            --bg-secondary: #1F2937; /* Dark Blue-Gray */
+            --bg-tertiary: #374151; /* Medium Gray */
+            --bg-hover: #4B5563; /* Lighter Gray Hover */
+            --bg-code-placeholder: #171e2b; /* Darker code background */
+
+            --text-primary: #E5E7EB; /* Light Gray (Almost White) */
+            --text-secondary: #9CA3AF; /* Medium Gray */
+            --text-placeholder: #6B7280; /* Darker Gray (Placeholders) */
+            --text-heading: #F9FAFB; /* Very Light Gray (Headings) */
+
+            --accent-blue: #3B82F6; /* Primary Blue */
+            --accent-blue-light: #60A5FA; /* Lighter Blue (Hover/Active) */
+            --accent-green: #10B981; /* Emerald Green */
+            --accent-yellow: #F59E0B; /* Amber Yellow */
+            --accent-red: #EF4444; /* Red */
+
+            --border-color: #4B5563; /* Gray Border */
+            --border-color-light: #6B7280; /* Lighter Border */
+            --border-focus: var(--accent-blue-light);
+
+            --danger-color: var(--accent-red);
+            --favorite-color: var(--accent-yellow);
+
+            /* Subtle Shadows */
+            --shadow-color: rgba(0, 0, 0, 0.2);
+            --shadow-sm: 0 1px 3px 0 var(--shadow-color), 0 1px 2px -1px var(--shadow-color);
+            --shadow-md: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
+            --shadow-lg: 0 10px 15px -3px var(--shadow-color), 0 4px 6px -4px var(--shadow-color);
+
+            --border-radius-sm: 6px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 10px;
+            --transition-speed: 0.2s ease-in-out;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body {
+            font-family: 'Inter', sans-serif; background-color: var(--bg-primary); color: var(--text-primary);
+            line-height: 1.65; display: flex; flex-direction: column; min-height: 100vh;
+            overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+        }
+        #root { display: flex; flex-direction: column; flex-grow: 1; }
+        .app-container { flex-grow: 1; width: 100%; max-width: 1600px; margin: 0 auto; padding: 2rem 2.5rem; }
+
+        /* --- Header --- */
+        .app-header {
+            background-color: var(--bg-secondary); color: var(--text-heading); padding: 1.25rem 2.5rem; text-align: center;
+            border-bottom: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 2.5rem;
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .app-header h1 { font-size: 2rem; font-weight: 600; letter-spacing: 0.5px; }
+        .app-header h1 i { margin-right: 0.75rem; color: var(--accent-blue); transform: translateY(1px); }
+
+        /* --- Footer --- */
+        .app-footer {
+            text-align: center; padding: 1.5rem 0; margin-top: 3.5rem; background-color: var(--bg-secondary);
+            color: var(--text-secondary); font-size: 0.875rem; border-top: 1px solid var(--border-color);
+        }
+
+        /* --- Controls --- */
+        .controls-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; gap: 1.5rem; flex-wrap: wrap; }
+        .search-box { position: relative; flex-grow: 1; min-width: 300px; }
+        .search-box input {
+            width: 100%; padding: 0.75rem 2.75rem 0.75rem 2.75rem; font-size: 1rem; border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md); background-color: var(--bg-secondary); color: var(--text-primary);
+            outline: none; transition: border-color var(--transition-speed), box-shadow var(--transition-speed), background-color var(--transition-speed);
+        }
+        .search-box input::placeholder { color: var(--text-placeholder); opacity: 1; }
+        .search-box input:focus { background-color: var(--bg-primary); border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); }
+        .search-box .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); pointer-events: none; font-size: 0.9rem; }
+        .search-box .clear-button {
+            position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none;
+            color: var(--text-secondary); font-size: 1.25rem; cursor: pointer; padding: 0.3rem; line-height: 1;
+            transition: color var(--transition-speed); display: none;
+        }
+        .search-box .clear-button:hover { color: var(--text-primary); }
+        .filter-toggle button {
+            padding: 0.6rem 1.1rem; font-size: 0.9rem; font-weight: 500; border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md); background-color: var(--bg-secondary); color: var(--text-secondary);
+            cursor: pointer; transition: all var(--transition-speed); margin-left: 0.75rem; display: inline-flex;
+            align-items: center; gap: 0.5rem;
+        }
+        .filter-toggle button:hover:not(.active) { background-color: var(--bg-tertiary); border-color: var(--border-color-light); color: var(--text-primary); }
+        .filter-toggle button.active { background-color: var(--accent-blue); color: white; border-color: var(--accent-blue); box-shadow: var(--shadow-sm); }
+        .filter-toggle button.active i { color: white; }
+        .filter-toggle button i { color: var(--text-secondary); transition: color var(--transition-speed); }
+        .filter-toggle button:hover:not(.active) i { color: var(--text-primary); }
+
+        /* --- Dashboard --- */
+        .category-section { margin-bottom: 3rem; }
+        .category-header {
+            font-size: 1.75rem; font-weight: 600; color: var(--text-heading); margin-bottom: 1.5rem;
+            padding-bottom: 0.6rem; border-bottom: 2px solid var(--accent-blue); display: inline-block;
+        }
+        .category-header i { margin-right: 0.75rem; color: var(--accent-blue); opacity: 0.8; }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 1.75rem; list-style: none; padding: 0; }
+
+        /* --- Tool Card --- */
+        .tool-card {
+            background-color: var(--bg-secondary); border-radius: var(--border-radius-lg); box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color); display: flex; flex-direction: column;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed), border-color var(--transition-speed);
+            position: relative; overflow: hidden;
+        }
+        .tool-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background-color: var(--accent-blue); transform: scaleX(0); transform-origin: left;
+            transition: transform var(--transition-speed); z-index: 2;
+        }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--border-color-light); }
+        .tool-card:hover::before { transform: scaleX(1); }
+        .tool-card-content { padding: 1.25rem 1.5rem; flex-grow: 1; display: flex; flex-direction: column; cursor: pointer; }
+        .tool-card h3 {
+            color: var(--text-heading); margin-bottom: 0.5rem; font-size: 1.25rem; font-weight: 600;
+            display: flex; align-items: center; line-height: 1.4;
+        }
+        .tool-card h3 i { margin-right: 0.75rem; font-size: 1.15em; color: var(--accent-blue-light); width: 26px; text-align: center; flex-shrink: 0; }
+        .tool-card-description {
+            font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem; overflow: hidden;
+            text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical; flex-grow: 1; min-height: 52px;
+        }
+        .tool-card-footer {
+            padding: 0.875rem 1.5rem; background-color: var(--bg-primary); border-top: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;
+        }
+        .card-tags-container { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+        .tag { font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.6rem; border-radius: var(--border-radius-sm); white-space: nowrap; border: 1px solid transparent; line-height: 1.4; }
+        .category-tag { background-color: rgba(59, 130, 246, 0.1); color: var(--accent-blue-light); border-color: rgba(59, 130, 246, 0.3); }
+        .difficulty-tag-Beginner { background-color: rgba(16, 185, 129, 0.1); color: var(--accent-green); border-color: rgba(16, 185, 129, 0.3); }
+        .difficulty-tag-Intermediate { background-color: rgba(245, 158, 11, 0.1); color: var(--accent-yellow); border-color: rgba(245, 158, 11, 0.3); }
+        .difficulty-tag-Advanced { background-color: rgba(239, 68, 68, 0.1); color: var(--accent-red); border-color: rgba(239, 68, 68, 0.3); }
+        .difficulty-tag-Expert { background-color: rgba(139, 92, 246, 0.1); color: #a78bfa; border-color: rgba(139, 92, 246, 0.3); }
+        .difficulty-tag-Unknown { background-color: rgba(107, 114, 128, 0.1); color: var(--text-secondary); border-color: rgba(107, 114, 128, 0.3); }
+        .keyword-tag { background-color: rgba(75, 85, 99, 0.2); color: var(--text-secondary); border-color: rgba(75, 85, 99, 0.4); font-size: 0.7rem; }
+        .platforms-list { display: flex; gap: 0.7rem; }
+        .platform-icon { font-size: 1.05rem; color: var(--text-secondary); opacity: 0.85; transition: color var(--transition-speed), transform 0.1s ease; }
+        .platform-icon:hover { color: var(--text-primary); transform: scale(1.1); }
+        .favorite-button {
+            position: absolute; top: 0.75rem; right: 0.75rem; background: none; border: none; font-size: 1.5rem;
+            cursor: pointer; color: var(--text-secondary); transition: color var(--transition-speed), transform var(--transition-speed);
+            padding: 0.3rem; z-index: 10;
+        }
+        .favorite-button.favorited { color: var(--favorite-color); }
+        .favorite-button:hover { transform: scale(1.15); color: var(--favorite-color); }
+
+        /* --- Tool Detail --- */
+        .tool-detail-view { background-color: var(--bg-secondary); padding: 2.5rem 3rem; border-radius: var(--border-radius-lg); box-shadow: var(--shadow-md); margin-top: 2rem; border: 1px solid var(--border-color); }
+        .tool-detail-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 1.5rem; }
+        .tool-detail-title-meta { flex-grow: 1; max-width: 100%; }
+        .tool-detail-header h2 { color: var(--text-heading); font-size: 2rem; font-weight: 600; display: flex; align-items: center; margin-bottom: 0.75rem; line-height: 1.3; }
+        .tool-detail-header h2 i { margin-right: 1rem; color: var(--accent-blue); font-size: 1.1em; }
+        .tool-detail-description { font-size: 1rem; color: var(--text-primary); margin-bottom: 1.5rem; max-width: 75ch; line-height: 1.7; }
+        .tool-meta { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; margin-top: 0.5rem; }
+        .tool-meta .tags-row { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+        .tool-meta .tags-label { font-size: 0.9rem; color: var(--text-secondary); margin-right: 0.5rem; font-weight: 500; }
+        .tool-meta .platform-tag { display: inline-flex; align-items: center; gap: 0.4rem; background-color: var(--bg-tertiary); color: var(--text-secondary); padding: 0.35rem 0.75rem; }
+        .tool-meta .website-link { margin-top: 0.5rem; }
+        .tool-meta .website-link a { color: var(--accent-blue-light); text-decoration: none; font-weight: 500; transition: color var(--transition-speed), text-decoration var(--transition-speed); display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.95rem; }
+        .tool-meta .website-link a:hover { color: #93C5FD; text-decoration: underline; }
+        .tool-detail-actions { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; padding-top: 0.25rem; }
+        .back-button { background-color: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); padding: 0.65rem 1.25rem; font-size: 0.9rem; font-weight: 500; border-radius: var(--border-radius-md); cursor: pointer; transition: all var(--transition-speed); display: inline-flex; align-items: center; gap: 0.5rem; white-space: nowrap; }
+        .back-button:hover { background-color: var(--bg-hover); border-color: var(--border-color-light); transform: translateY(-1px); }
+        .back-button:active { transform: translateY(0px); }
+
+        /* Cheatsheet Placeholder */
+        .cheatsheet-placeholder { background-color: var(--bg-code-placeholder); border: 1px solid var(--border-color); padding: 2.5rem 3rem; border-radius: var(--border-radius-md); min-height: 400px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: var(--text-secondary); font-family: 'Fira Code', monospace; margin-top: 2.5rem; line-height: 1.7; }
+        .cheatsheet-placeholder h4 { color: var(--text-heading); margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.3rem; font-weight: 600; }
+        .cheatsheet-placeholder p { max-width: 680px; font-size: 0.95rem; margin-bottom: 1.25rem; }
+        .cheatsheet-placeholder p:last-of-type { margin-bottom: 0; }
+        .cheatsheet-placeholder i.placeholder-icon { font-size: 3rem; color: var(--accent-blue); opacity: 0.6; }
+        .cheatsheet-placeholder code { background-color: rgba(156, 163, 175, 0.1); padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.9em; color: var(--text-primary); border: 1px solid var(--border-color); }
+        .cheatsheet-placeholder .info-box { margin-top: 2rem; padding: 1rem 1.5rem; background-color: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--border-radius-md); font-size: 0.9rem; color: var(--accent-green); text-align: left; }
+        .cheatsheet-placeholder .info-box i { margin-right: 0.6rem; }
+
+        /* --- Responsive --- */
+        @media (max-width: 1200px) { .app-container { padding: 2rem; } }
+        @media (max-width: 992px) { html { font-size: 15px; } .app-header h1 { font-size: 1.8rem; } .dashboard-grid { grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.5rem;} .category-header { font-size: 1.6rem; } .tool-detail-header h2 { font-size: 1.8rem; } .tool-detail-view { padding: 2rem; } }
+        @media (max-width: 768px) { html { font-size: 14px; } .app-container { padding: 1.5rem 1rem; } .app-header { padding: 1rem 1.25rem; } .app-header h1 { font-size: 1.6rem; } .controls-container { flex-direction: column; align-items: stretch; gap: 1rem; } .search-box { width: 100%; } .filter-toggle { width: 100%; display: flex; justify-content: center; flex-wrap: wrap; gap: 0.6rem; } .filter-toggle button { margin-left: 0; } .dashboard-grid { grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1rem;} .tool-card h3 { font-size: 1.15rem; } .tool-detail-header { flex-direction: column; align-items: stretch; } .tool-detail-actions { justify-content: flex-start; width: 100%; margin-top: 0.5rem; } .tool-detail-header h2 { font-size: 1.6rem; } .tool-detail-view { padding: 1.5rem; } .cheatsheet-placeholder { padding: 2rem; } }
+        @media (max-width: 480px) { .app-header h1 { font-size: 1.5rem; } .dashboard-grid { grid-template-columns: 1fr; } .tool-card-content { padding: 1.25rem; } .tool-card-footer { padding: 0.75rem 1.25rem; } .tool-detail-header h2 { font-size: 1.5rem; } .tool-detail-description { font-size: 0.95rem;} .cheatsheet-placeholder { padding: 1.5rem; min-height: 300px; } .cheatsheet-placeholder i.placeholder-icon { font-size: 2.5rem; } .cheatsheet-placeholder h4 { font-size: 1.15rem; } .cheatsheet-placeholder p { font-size: 0.9rem; } }
+
+    </style>
+</head>
+<body>
+
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo, useCallback } = React;
+
+        // --- Tool Data ---
+        // IMPORTANT: Fill in 'description' and 'tags' accurately!
+        const toolsData = [
+             // --- Network Scanning & Analysis ---
+            { id: 1, name: "Nmap", category: "Network Scanning & Analysis", icon: "fas fa-network-wired", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://nmap.org/",
+              description: "Network exploration tool and security/port scanner. Used for network discovery, security auditing, inventory, and monitoring.", tags: ["scan", "port", "network", "discovery", "os detection", "service detection", "scripting engine"] },
+            { id: 2, name: "Wireshark", category: "Network Scanning & Analysis", icon: "fas fa-wifi", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://www.wireshark.org/",
+              description: "The world's foremost network protocol analyzer. Deep inspection of hundreds of protocols, live capture, and offline analysis.", tags: ["sniffer", "packet analysis", "protocol", "network", "troubleshooting", "forensics", "gui"] },
+            { id: 3, name: "Masscan", category: "Network Scanning & Analysis", icon: "fas fa-fighter-jet", difficulty: "Advanced", platforms: ["Linux", "macOS"], website: "https://github.com/robertdavidgraham/masscan",
+              description: "Extremely fast TCP port scanner. Can scan the entire internet in minutes. Asynchronous operation.", tags: ["scan", "port", "fast", "network", "tcp", "internet-wide"] },
+            { id: 4, name: "Tcpdump", category: "Network Scanning & Analysis", icon: "fas fa-terminal", difficulty: "Intermediate", platforms: ["Linux", "macOS"], website: "https://www.tcpdump.org/",
+              description: "Powerful command-line packet analyzer. Allows capturing and displaying TCP/IP and other packets based on filters.", tags: ["sniffer", "packet analysis", "cli", "network", "troubleshooting", "pcap"] },
+            { id: 36, name: "Angry IP Scanner", category: "Network Scanning & Analysis", icon: "fas fa-bolt", difficulty: "Beginner", platforms: ["Linux", "Windows", "macOS"], website: "https://angryip.org/",
+              description: "Fast and simple IP address and port scanner. Useful for quick network checks and discovery.", tags: ["scan", "port", "ip", "gui", "beginner", "java"] },
+            { id: 37, name: "Netcat", category: "Network Scanning & Analysis", icon: "fas fa-cat", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://nmap.org/ncat/",
+              description: "Versatile networking utility ('Swiss-army knife') for reading/writing network connections using TCP/UDP.", tags: ["network", "tcp", "udp", "connect", "listen", "transfer", "scan", "utility"] },
+            { id: 48, name: "Zmap", category: "Network Scanning & Analysis", icon: "fas fa-globe-americas", difficulty: "Advanced", platforms: ["Linux"], website: "https://zmap.io/",
+              description: "Open-source network scanner optimized for large-scale internet-wide network surveys.", tags: ["scan", "network", "internet-wide", "research", "fast"] },
+            { id: 49, name: "RustScan", category: "Network Scanning & Analysis", icon: "fab fa-rust", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/RustScan/RustScan",
+              description: "Modern, fast port scanner that finds ports quickly and can pipe results into Nmap for deeper analysis.", tags: ["scan", "port", "fast", "rust", "nmap", "scripting"] },
+            { id: 72, name: "Hping3", category: "Network Scanning & Analysis", icon: "fas fa-hammer", difficulty: "Advanced", platforms: ["Linux"], website: null,
+              description: "Command-line TCP/IP packet assembler/analyzer. Useful for firewall testing, port scanning, network testing, and traceroute.", tags: ["packet crafting", "scan", "firewall testing", "tcp", "udp", "icmp", "network audit"] },
+
+            // --- Vulnerability Analysis & Exploitation ---
+            { id: 5, name: "Metasploit Framework", category: "Vulnerability Analysis & Exploitation", icon: "fas fa-bomb", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS"], website: "https://www.metasploit.com/",
+              description: "Leading exploitation framework for developing, testing, and executing exploit code against remote targets.", tags: ["exploit", "framework", "pentest", "payload", "vulnerability", "cve", "post-exploitation", "meterpreter"] },
+            { id: 7, name: "SQLMap", category: "Vulnerability Analysis & Exploitation", icon: "fas fa-database", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "http://sqlmap.org/",
+              description: "Automates the process of detecting and exploiting SQL injection flaws and taking over database servers.", tags: ["sql injection", "sqli", "database", "exploit", "web", "automation", "python"] },
+            { id: 8, name: "Nessus Essentials", category: "Vulnerability Analysis & Exploitation", icon: "fas fa-shield-alt", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://www.tenable.com/products/nessus/nessus-essentials",
+              description: "Widely-used vulnerability scanner for identifying vulnerabilities, misconfigurations, and malware on networks.", tags: ["vulnerability scanner", "scan", "nessus", "cve", "compliance", "audit", "gui"] },
+            { id: 50, name: "OpenVAS / GVM", category: "Vulnerability Analysis & Exploitation", icon: "fas fa-shield-virus", difficulty: "Advanced", platforms: ["Linux"], website: "https://www.greenbone.net/",
+              description: "Comprehensive open-source vulnerability scanning and management solution (formerly OpenVAS).", tags: ["vulnerability scanner", "scan", "openvas", "gvm", "oss", "cve", "compliance", "linux"] },
+            { id: 9, name: "Nikto", category: "Vulnerability Analysis & Exploitation", icon: "fas fa-server", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://cirt.net/Nikto2",
+              description: "Web server scanner performing comprehensive tests for outdated software, dangerous files/CGIs, and server configuration issues.", tags: ["web scanner", "vulnerability", "server", "cve", "misconfiguration", "perl"] },
+            { id: 39, name: "Hydra", category: "Vulnerability Analysis & Exploitation", icon: "fas fa-key", difficulty: "Intermediate", platforms: ["Linux", "macOS"], website: "https://github.com/vanhauser-thc/thc-hydra",
+              description: "Very fast network logon cracker supporting numerous protocols like HTTP, FTP, SMB, SSH, RDP, databases, etc.", tags: ["brute force", "password cracking", "login", "network", "authentication"] },
+            { id: 40, name: "Exploit-DB", category: "Vulnerability Analysis & Exploitation", icon: "fas fa-book-skull", difficulty: "Beginner", platforms: ["Web"], website: "https://www.exploit-db.com/",
+              description: "Archive of public exploits and corresponding vulnerable software, developed for pentesters and researchers.", tags: ["exploit", "database", "cve", "vulnerability", "research", "resource", "offensive security"] },
+            { id: 51, name: "SearchSploit", category: "Vulnerability Analysis & Exploitation", icon: "fas fa-search", difficulty: "Beginner", platforms: ["Linux", "macOS"], website: "https://www.exploit-db.com/searchsploit",
+              description: "Command-line search tool for Exploit-DB, allowing offline searches for exploits based on terms.", tags: ["exploit", "search", "cli", "offline", "exploit-db", "utility"] },
+            { id: 73, name: "CrackMapExec", category: "Vulnerability Analysis & Exploitation", icon: "fas fa-network-wired", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/byt3bl33d3r/CrackMapExec",
+              description: "Post-exploitation tool aiding pentesters in assessing large Active Directory networks via protocols like SMB, LDAP, WinRM.", tags: ["ad", "active directory", "post-exploitation", "smb", "ldap", "winrm", "pentest", "windows"] },
+
+            // --- Web Application Security ---
+             { id: 6, name: "Burp Suite", category: "Web Application Security", icon: "fas fa-bug", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://portswigger.net/burp",
+              description: "Integrated platform for web application security testing, including proxy, scanner, intruder, repeater, and sequencer.", tags: ["web", "proxy", "scanner", "pentest", "vulnerability", "burp", "interception", "gui", "java"] },
+            { id: 38, name: "OWASP ZAP", category: "Web Application Security", icon: "fas fa-spider", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://www.zaproxy.org/",
+              description: "Flagship OWASP open-source web application security scanner. Features intercepting proxy, active/passive scanning, fuzzing, and more.", tags: ["web", "proxy", "scanner", "oss", "owasp", "zap", "vulnerability", "dast", "gui", "java"] },
+            { id: 16, name: "Dirb / Dirbuster", category: "Web Application Security", icon: "fas fa-folder-open", difficulty: "Beginner", platforms: ["Linux", "Windows", "macOS"], website: null,
+              description: "Classic tools for discovering hidden web objects by brute-forcing directories and filenames using wordlists.", tags: ["web", "directory traversal", "brute force", "content discovery", "enumeration", "classic"] },
+            { id: 17, name: "Gobuster", category: "Web Application Security", icon: "fas fa-search-dollar", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/OJ/gobuster",
+              description: "Fast scanner written in Go for enumerating URIs (directories/files), DNS subdomains, and virtual host names.", tags: ["web", "directory traversal", "dns", "subdomain", "vhost", "brute force", "go", "content discovery", "cli"] },
+            { id: 18, name: "Wfuzz", category: "Web Application Security", icon: "fas fa-random", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/xmendez/wfuzz",
+              description: "Flexible web application fuzzer. Useful for finding resources, fuzzing parameters, checking injections, and identifying vulnerabilities.", tags: ["web", "fuzzing", "brute force", "vulnerability", "payloads", "python", "cli"] },
+             { id: 52, name: "ffuf", category: "Web Application Security", icon: "fas fa-fighter-jet", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/ffuf/ffuf",
+              description: "Fast web fuzzer written in Go. Designed for speed, flexibility, and massive concurrency.", tags: ["web", "fuzzing", "brute force", "fast", "go", "content discovery", "cli"] },
+            { id: 43, name: "WhatWeb", category: "Web Application Security", icon: "fas fa-fingerprint", difficulty: "Beginner", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/urbanadventurer/WhatWeb",
+              description: "Identifies technologies used on websites, including CMS, blogging platforms, frameworks, analytics packages, servers, etc.", tags: ["web", "fingerprint", "cms", "framework", "enumeration", "recon", "ruby", "cli"] },
+            { id: 53, name: "Arachni", category: "Web Application Security", icon: "fas fa-spider", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS"], website: "http://www.arachni-scanner.com/",
+              description: "Feature-rich, modular, high-performance Ruby framework aimed towards helping pentesters evaluate web application security.", tags: ["web scanner", "vulnerability", "framework", "ruby", "pentest", "dast"] },
+            { id: 54, name: "Commix", category: "Web Application Security", icon: "fas fa-terminal", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/commixproject/commix",
+              description: "Automated tool for testing and exploiting command injection vulnerabilities in web applications.", tags: ["web", "command injection", "exploit", "vulnerability", "automation", "python"] },
+            { id: 74, name: "XSStrike", category: "Web Application Security", icon: "fas fa-code", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/s0md3v/XSStrike",
+               description: "Advanced XSS detection and exploitation suite. Goes beyond generic payloads with context analysis and fuzzing.", tags: ["web", "xss", "cross-site scripting", "exploit", "scanner", "fuzzing", "python"] },
+
+            // --- Wireless Hacking ---
+            { id: 10, name: "Aircrack-ng Suite", category: "Wireless Hacking", icon: "fas fa-signal", difficulty: "Intermediate", platforms: ["Linux"], website: "https://www.aircrack-ng.org/",
+              description: "A complete suite of tools to assess Wi-Fi network security (monitoring, attacking, testing, cracking WEP/WPA/WPA2-PSK).", tags: ["wifi", "wireless", "wep", "wpa", "crack", "monitor", "packet capture", "airmon", "airodump", "aireplay", "aircrack"] },
+            { id: 11, name: "Reaver", category: "Wireless Hacking", icon: "fas fa-unlock-alt", difficulty: "Intermediate", platforms: ["Linux"], website: "https://github.com/t6x/reaver-wps-fork-t6x",
+              description: "Implements a brute force attack against Wi-Fi Protected Setup (WPS) registrar PINs to recover WPA/WPA2 passphrases.", tags: ["wifi", "wireless", "wps", "crack", "brute force", "pin", "wpa"] },
+            { id: 12, name: "Kismet", category: "Wireless Hacking", icon: "fas fa-satellite-dish", difficulty: "Advanced", platforms: ["Linux", "macOS"], website: "https://www.kismetwireless.net/",
+              description: "Wireless network detector, sniffer, and intrusion detection system supporting WiFi, Bluetooth, SDR, and more.", tags: ["wifi", "wireless", "sniffer", "ids", "wardriving", "bluetooth", "monitor", "sdr"] },
+            { id: 41, name: "Wifite2", category: "Wireless Hacking", icon: "fas fa-robot", difficulty: "Beginner", platforms: ["Linux"], website: "https://github.com/derv82/wifite2",
+              description: "Automated wireless auditing script. Attempts to discover, target, and crack multiple WEP/WPA/WPS encrypted networks.", tags: ["wifi", "wireless", "automated", "crack", "wep", "wpa", "wps", "script", "python"] },
+            { id: 55, name: "Fern Wifi Cracker", category: "Wireless Hacking", icon: "fas fa-leaf", difficulty: "Beginner", platforms: ["Linux"], website: "https://github.com/savio-code/fern-wifi-cracker",
+              description: "GUI-based wireless security auditing and attack tool implementing various attacks (WEP, WPA, WPS).", tags: ["wifi", "wireless", "gui", "crack", "wep", "wpa", "wps", "beginner", "python"] },
+             { id: 56, name: "Bettercap", category: "Wireless Hacking", icon: "fas fa-hat-wizard", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS"], website: "https://www.bettercap.org/",
+              description: "Powerful, flexible, and portable framework for network attacks and monitoring (ARP spoofing, DNS spoofing, sniffing, WiFi recon/attacks).", tags: ["mitm", "sniffing", "spoofing", "wifi", "network", "framework", "go", "modular"] }, // Also MITM/Sniffing
+            { id: 75, name: "Fluxion", category: "Wireless Hacking", icon: "fas fa-wave-square", difficulty: "Intermediate", platforms: ["Linux"], website: "https://github.com/FluxionNetwork/fluxion",
+              description: "Social engineering focused WPA/WPA2 cracking suite using fake APs (Evil Twin) and captive portals.", tags: ["wifi", "wireless", "wpa", "crack", "social engineering", "evil twin", "captive portal", "phishing"] },
+
+            // --- Password Attacks ---
+            { id: 13, name: "John the Ripper", category: "Password Attacks", icon: "fas fa-skull-crossbones", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://www.openwall.com/john/",
+              description: "Fast password cracker, available for many platforms. Supports hundreds of hash and cipher types.", tags: ["password cracking", "hash", "brute force", "dictionary attack", "john", "offline"] },
+            { id: 14, name: "Hashcat", category: "Password Attacks", icon: "fas fa-cat", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS"], website: "https://hashcat.net/hashcat/",
+              description: "Advanced password recovery utility supporting GPU acceleration for massive cracking speed across numerous hash types.", tags: ["password cracking", "hash", "gpu", "fast", "brute force", "dictionary attack", "rule-based", "offline"] },
+            { id: 15, name: "Cain & Abel", category: "Password Attacks", icon: "fab fa-windows", difficulty: "Intermediate", platforms: ["Windows"], website: "http://www.oxid.it/cain.html",
+              description: "Password recovery tool for Windows. Features sniffing, dictionary/brute-force attacks, cryptanalysis, and ARP poisoning.", tags: ["password recovery", "windows", "sniffer", "mitm", "hash", "arp poisoning", "legacy"] }, // Older
+            { id: 42, name: "Mimikatz", category: "Password Attacks", icon: "fas fa-ghost", difficulty: "Advanced", platforms: ["Windows"], website: "https://github.com/gentilkiwi/mimikatz",
+              description: "Well-known tool to extract plaintext passwords, hashes, PIN codes, and Kerberos tickets from Windows memory (lsass).", tags: ["windows", "credentials", "password dumping", "kerberos", "post-exploitation", "lsass", "hash"] }, // Also Post-Exploitation
+            { id: 57, name: "CeWL", category: "Password Attacks", icon: "fas fa-spider", difficulty: "Beginner", platforms: ["Linux"], website: "https://github.com/digininja/CeWL",
+              description: "Custom wordlist generator that spiders a given URL to a specified depth and collects unique words for password lists.", tags: ["wordlist", "generator", "web spider", "dictionary attack", "password cracking", "ruby"] },
+            { id: 58, name: "Medusa", category: "Password Attacks", icon: "fas fa-lock-open", difficulty: "Intermediate", platforms: ["Linux", "macOS"], website: "http://www.foofus.net/~jmk/medusa/medusa.html",
+              description: "Speedy, parallel, modular network login brute-forcer supporting many services (FTP, HTTP, SMB, SSH, Telnet, etc.).", tags: ["brute force", "login", "password cracking", "network", "online", "authentication"] },
+            { id: 76, name: "Patator", category: "Password Attacks", icon: "fas fa-bullseye", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/lanjelot/patator",
+              description: "Multi-purpose brute-forcer, designed to be flexible and support various protocols through modules (FTP, SSH, Telnet, SMB, HTTP, SQL, LDAP, etc.).", tags: ["brute force", "password cracking", "fuzzing", "network", "web", "online", "python"] },
+
+            // --- Forensics & Reverse Engineering ---
+            { id: 19, name: "Volatility Framework", category: "Forensics & Reverse Engineering", icon: "fas fa-memory", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS"], website: "https://www.volatilityfoundation.org/",
+              description: "Leading open-source memory forensics framework for incident response and malware analysis from memory dumps.", tags: ["forensics", "memory analysis", "malware analysis", "incident response", "volatility", "ram", "python"] },
+            { id: 20, name: "Autopsy / Sleuth Kit", category: "Forensics & Reverse Engineering", icon: "fas fa-hdd", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://www.sleuthkit.org/autopsy/",
+              description: "GUI digital forensics platform and command-line tools (The Sleuth Kit) for analyzing disk images and file systems.", tags: ["forensics", "disk analysis", "incident response", "sleuth kit", "gui", "filesystem"] },
+            { id: 21, name: "Ghidra", category: "Forensics & Reverse Engineering", icon: "fas fa-microchip", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS"], website: "https://ghidra-sre.org/",
+              description: "NSA's free, open-source software reverse engineering (SRE) suite including disassembler, decompiler, and analysis tools.", tags: ["reverse engineering", "disassembler", "decompiler", "malware analysis", "sre", "nsa", "java", "gui"] },
+            { id: 22, name: "Binwalk", category: "Forensics & Reverse Engineering", icon: "fas fa-box-open", difficulty: "Intermediate", platforms: ["Linux", "macOS"], website: "https://github.com/ReFirmLabs/binwalk",
+              description: "Tool for searching binary images for embedded files and executable code, primarily used for firmware analysis.", tags: ["firmware", "reverse engineering", "extraction", "analysis", "iot", "binary analysis", "python"] },
+            { id: 44, name: "Strings", category: "Forensics & Reverse Engineering", icon: "fas fa-font", difficulty: "Beginner", platforms: ["Linux", "Windows", "macOS"], website: null,
+              description: "Standard command-line utility that finds and prints printable character sequences in binary files.", tags: ["forensics", "reverse engineering", "malware analysis", "strings", "utility", "beginner", "cli"] },
+            { id: 59, name: "Radare2", category: "Forensics & Reverse Engineering", icon: "fas fa-cogs", difficulty: "Expert", platforms: ["Linux", "Windows", "macOS", "Mobile"], website: "https://rada.re/n/",
+              description: "Highly portable, open-source reversing framework with disassembler, debugger, hex editor, analysis capabilities, etc.", tags: ["reverse engineering", "disassembler", "debugger", "framework", "radare", "r2", "cli", "expert"] },
+            { id: 60, name: "ExifTool", category: "Forensics & Reverse Engineering", icon: "fas fa-image", difficulty: "Beginner", platforms: ["Linux", "Windows", "macOS"], website: "https://exiftool.org/",
+              description: "Platform-independent Perl library plus a command-line application for reading, writing, and editing meta information (EXIF, IPTC, XMP) in files.", tags: ["metadata", "exif", "forensics", "image analysis", "osint", "beginner", "perl", "cli"] },
+            { id: 77, name: "Cutter", category: "Forensics & Reverse Engineering", icon: "fas fa-cut", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://cutter.re/",
+              description: "Free and Open Source GUI for the Radare2 reverse engineering framework, offering a graphical interface to r2's capabilities.", tags: ["reverse engineering", "gui", "radare2", "disassembler", "decompiler", "qt"] },
+
+             // --- Information Gathering / OSINT ---
+            { id: 23, name: "theHarvester", category: "Information Gathering / OSINT", icon: "fas fa-envelope-open-text", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/laramies/theHarvester",
+              description: "Gathers emails, subdomains, hosts, employee names, open ports and banners from public sources like search engines and Shodan.", tags: ["osint", "recon", "enumeration", "email", "subdomain", "discovery", "python", "cli"] },
+            { id: 24, name: "Sublist3r", category: "Information Gathering / OSINT", icon: "fas fa-list-alt", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/aboul3la/Sublist3r",
+              description: "Fast subdomains enumeration tool using multiple OSINT sources (search engines, Netcraft, VirusTotal, etc.).", tags: ["osint", "recon", "subdomain", "enumeration", "dns", "python", "cli"] },
+            { id: 61, name: "Amass", category: "Information Gathering / OSINT", icon: "fas fa-project-diagram", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/owasp-amass/amass",
+              description: "OWASP tool for in-depth attack surface mapping and external asset discovery using open source information gathering and active reconnaissance techniques.", tags: ["osint", "recon", "attack surface", "enumeration", "subdomain", "owasp", "dns", "go", "cli"] },
+            { id: 25, name: "Maltego", category: "Information Gathering / OSINT", icon: "fas fa-share-alt", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://www.maltego.com/",
+              description: "Interactive data mining tool rendering directed graphs for link analysis, visualizing OSINT data relationships.", tags: ["osint", "recon", "visualization", "link analysis", "graph", "gui", "java"] },
+            { id: 26, name: "Recon-ng", category: "Information Gathering / OSINT", icon: "fas fa-binoculars", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/lanmaster53/recon-ng",
+              description: "A full-featured web reconnaissance framework written in Python, complete with independent modules and database interaction.", tags: ["osint", "recon", "framework", "web", "enumeration", "python", "cli", "modular"] },
+            { id: 45, name: "Shodan", category: "Information Gathering / OSINT", icon: "fas fa-search-location", difficulty: "Beginner", platforms: ["Web"], website: "https://www.shodan.io/",
+              description: "Search engine for finding specific types of Internet-connected devices (webcams, routers, servers, IoT) using service banners.", tags: ["osint", "recon", "search engine", "iot", "device discovery", "web service", "banners"] },
+            { id: 46, name: "WHOIS", category: "Information Gathering / OSINT", icon: "fas fa-address-card", difficulty: "Beginner", platforms: ["Linux", "Windows", "macOS"], website: null,
+              description: "Standard query protocol used for querying databases storing registered users or assignees of internet resources like domains and IP blocks.", tags: ["osint", "recon", "domain", "ip lookup", "utility", "beginner", "cli"] },
+            { id: 62, name: "SpiderFoot", category: "Information Gathering / OSINT", icon: "fas fa-shoe-prints", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://www.spiderfoot.net/",
+              description: "OSINT automation tool. Integrates with numerous data sources (over 100 modules) to gather and analyze intelligence on IPs, domains, emails, names, etc.", tags: ["osint", "recon", "automation", "enumeration", "data correlation", "python", "web ui", "cli"] },
+            { id: 78, name: "Photon", category: "Information Gathering / OSINT", icon: "fas fa-lightbulb", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/s0md3v/Photon",
+              description: "Incredibly fast crawler designed for OSINT and reconnaissance. Extracts URLs, emails, files, subdomains, etc.", tags: ["osint", "recon", "crawler", "web spider", "enumeration", "python", "cli", "fast"] },
+
+            // --- Post-Exploitation & C2 ---
+             // id 42 Mimikatz also fits here
+             // id 73 CrackMapExec also fits here
+            { id: 27, name: "Meterpreter", category: "Post-Exploitation & C2", icon: "fas fa-terminal", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS", "Mobile"], website: "https://www.metasploit.com/",
+              description: "Advanced, dynamically extensible payload within Metasploit Framework. Provides an interactive shell, runs in memory, extensive features.", tags: ["post-exploitation", "payload", "metasploit", "c2", "in-memory", "privesc", "persistence"] },
+            { id: 28, name: "Empire / Starkiller", category: "Post-Exploitation & C2", icon: "fas fa-crown", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/BC-SECURITY/Empire",
+              description: "Pure PowerShell/Python post-exploitation agent framework built on cryptologically-secure communications. Starkiller is its GUI.", tags: ["post-exploitation", "c2", "framework", "powershell", "python", "windows", "starkiller", "agent"] },
+            { id: 29, name: "Cobalt Strike", category: "Post-Exploitation & C2", icon: "fas fa-user-secret", difficulty: "Expert", platforms: ["Linux", "Windows", "macOS"], website: "https://www.cobaltstrike.com/",
+              description: "Commercial threat emulation software for red teams. Provides post-exploitation agents (Beacons) and C2 infrastructure.", tags: ["post-exploitation", "c2", "red team", "adversary simulation", "commercial", "beacon", "malleable c2"] },
+            { id: 63, name: "Pupy", category: "Post-Exploitation & C2", icon: "fas fa-paw", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS", "Android"], website: "https://github.com/n1nj4sec/pupy",
+              description: "Open source, cross-platform (Windows, Linux, OSX, Android) remote administration and post-exploitation tool mainly written in Python.", tags: ["post-exploitation", "c2", "rat", "cross-platform", "oss", "python", "agent"] },
+            { id: 64, name: "PowerSploit", category: "Post-Exploitation & C2", icon: "fab fa-windows", difficulty: "Advanced", platforms: ["Windows"], website: "https://github.com/PowerShellMafia/PowerSploit",
+              description: "Collection of PowerShell modules useful for penetration testers during all phases of an assessment, particularly post-exploitation.", tags: ["post-exploitation", "powershell", "windows", "script", "recon", "privesc", "persistence", "collection"] },
+            { id: 79, name: "Covenant", category: "Post-Exploitation & C2", icon: "fas fa-shield-halved", difficulty: "Advanced", platforms: ["Windows", ".NET"], website: "https://github.com/cobbr/Covenant",
+              description: "A .NET command and control framework that aims to highlight the attack surface of .NET, making the use of offensive .NET tradecraft easier.", tags: ["post-exploitation", "c2", "framework", "dotnet", "csharp", "windows", "agent"] },
+
+             // --- Sniffing & Spoofing ---
+            { id: 31, name: "Ettercap", category: "Sniffing & Spoofing", icon: "fas fa-user-ninja", difficulty: "Intermediate", platforms: ["Linux", "macOS"], website: "https://www.ettercap-project.org/",
+              description: "Comprehensive suite for man-in-the-middle attacks on LAN. Features sniffing of live connections, content filtering, and many other tricks.", tags: ["mitm", "sniffing", "spoofing", "arp poisoning", "network", "lan"] },
+             // id 56 Bettercap is relevant here too
+            { id: 33, name: "Scapy", category: "Sniffing & Spoofing", icon: "fab fa-python", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS"], website: "https://scapy.net/",
+              description: "Powerful Python library for packet manipulation. Forge/decode packets of a wide number of protocols, send them, capture them, match requests and replies, etc.", tags: ["packet crafting", "sniffing", "spoofing", "python", "library", "network", "protocol analysis"] },
+            { id: 47, name: "Dsniff", category: "Sniffing & Spoofing", icon: "fas fa-eye", difficulty: "Intermediate", platforms: ["Linux", "macOS"], website: "https://www.monkey.org/~dugsong/dsniff/",
+              description: "Collection of tools for network auditing and penetration testing (dsniff, filesnarf, mailsnarf, msgsnarf, urlsnarf, webspy). Focuses on sniffing credentials.", tags: ["sniffing", "mitm", "password sniffing", "network", "suite", "credentials"] },
+            { id: 65, name: "Responder", category: "Sniffing & Spoofing", icon: "fas fa-reply", difficulty: "Advanced", platforms: ["Linux"], website: "https://github.com/lgandx/Responder",
+              description: "LLMNR, NBT-NS and MDNS poisoner. Responds to specific NetBIOS queries, aiming to capture NTLMv1/v2 hashes.", tags: ["llmnr", "nbt-ns", "mdns", "poisoning", "hash capturing", "ntlm", "windows", "mitm", "python"] },
+            { id: 80, name: "MITMProxy", category: "Sniffing & Spoofing", icon: "fas fa-shield-alt", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://mitmproxy.org/",
+              description: "Interactive TLS-capable intercepting HTTP proxy with a console interface for inspecting and modifying HTTP/S traffic.", tags: ["mitm", "proxy", "http", "https", "interception", "tls", "web", "debugging", "python", "cli"] },
+
+             // --- Cloud Security Tools ---
+             { id: 66, name: "Pacu", category: "Cloud Security", icon: "fas fa-cloud", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/RhinoSecurityLabs/pacu",
+              description: "Open-source AWS exploitation framework, designed for offensive security testing against cloud environments. Modular.", tags: ["cloud", "aws", "exploit", "framework", "pentest", "aws security", "python"] },
+             { id: 67, name: "Scout Suite", category: "Cloud Security", icon: "fas fa-binoculars", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/nccgroup/ScoutSuite",
+              description: "Multi-cloud security auditing tool (AWS, Azure, GCP). Assesses security posture against common best practices and benchmarks.", tags: ["cloud", "audit", "security posture", "aws", "azure", "gcp", "scanner", "python"] },
+             { id: 68, name: "Prowler", category: "Cloud Security", icon: "fas fa-shield-check", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/prowler-cloud/prowler",
+              description: "Command line tool for AWS security assessment, auditing, hardening and incident response, based on CIS Benchmarks and other checks.", tags: ["cloud", "aws", "audit", "scanner", "hardening", "compliance", "cis", "bash", "cli"] },
+             { id: 81, name: "Cloud Custodian", category: "Cloud Security", icon: "fas fa-gavel", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS"], website: "https://cloudcustodian.io/",
+               description: "Stateless rules engine for managing public cloud accounts and resources using policies written in YAML (compliance, security, cost optimization).", tags: ["cloud", "policy", "compliance", "automation", "aws", "azure", "gcp", "yaml", "governance"] },
+
+             // --- Mobile Security Tools ---
+             { id: 69, name: "MobSF", category: "Mobile Security", icon: "fas fa-mobile-screen-button", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/MobSF/Mobile-Security-Framework-MobSF",
+              description: "Automated, all-in-one mobile application (Android/iOS/Windows) pen-testing, malware analysis, and security assessment framework.", tags: ["mobile", "android", "ios", "scanner", "malware analysis", "static analysis", "dynamic analysis", "framework", "python", "web ui"] },
+             { id: 70, name: "Frida", category: "Mobile Security", icon: "fas fa-syringe", difficulty: "Expert", platforms: ["Linux", "Windows", "macOS", "Android", "iOS"], website: "https://frida.re/",
+              description: "Dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers. Inject scripts into black-box processes.", tags: ["mobile", "reverse engineering", "instrumentation", "hooking", "android", "ios", "frida", "debugging", "javascript", "python"] },
+             { id: 71, name: "Drozer", category: "Mobile Security", icon: "fab fa-android", difficulty: "Advanced", platforms: ["Linux", "Windows", "macOS"], website: "https://labs.f-secure.com/tools/drozer/",
+              description: "Comprehensive security and attack framework for Android, allowing interaction with the Dalvik VM, IPC endpoints, etc.", tags: ["mobile", "android", "pentest", "framework", "ipc", "vulnerability", "java"] },
+             { id: 82, name: "Objection", category: "Mobile Security", icon: "fas fa-hand-paper", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://github.com/sensepost/objection",
+              description: "Runtime mobile exploration toolkit, powered by Frida, built to help assess mobile apps without needing a jailbreak/root by patching apps.", tags: ["mobile", "runtime", "frida", "android", "ios", "ssl pinning", "root detection", "patching", "python"] },
+
+            // --- Reporting Tools ---
+            { id: 34, name: "Dradis Framework", category: "Reporting & Collaboration", icon: "fas fa-clipboard-list", difficulty: "Beginner", platforms: ["Linux", "Windows", "macOS", "Web"], website: "https://dradisframework.com/",
+              description: "Open-source framework to enable effective collaboration and reporting for security assessment teams.", tags: ["reporting", "collaboration", "pentest", "framework", "documentation", "web ui", "ruby"] },
+            { id: 35, name: "MagicTree", category: "Reporting & Collaboration", icon: "fas fa-tree", difficulty: "Intermediate", platforms: ["Linux", "Windows", "macOS"], website: "https://www.gremwell.com/magictree",
+              description: "Data management tool designed for pentesters. Facilitates data consolidation and reporting with a tree-structured note system.", tags: ["reporting", "data management", "pentest", "notes", "tree", "java", "gui"] },
+
+            // Add more tools... Make sure to include all fields!
+
+        ].sort((a, b) => a.name.localeCompare(b.name)); // Keep sorted alphabetically
+
+
+        // --- Utility Functions & Mappings ---
+        const groupToolsByCategory = (tools) => {
+            if (!Array.isArray(tools)) return {};
+            return tools.reduce((acc, tool) => {
+                if (typeof tool !== 'object' || tool === null) return acc;
+                const category = tool.category || 'Uncategorized';
+                if (!acc[category]) acc[category] = [];
+                acc[category].push(tool);
+                return acc;
+            }, {});
+        };
+
+        const platformIcons = {
+            "Linux": "fab fa-linux", "Windows": "fab fa-windows", "macOS": "fab fa-apple",
+            "Web": "fas fa-globe", "Mobile": "fas fa-mobile-alt", "Android": "fab fa-android",
+            "iOS": "fab fa-app-store-ios", ".NET": "fab fa-microsoft"
+        };
+
+        // --- React Components ---
+
+        function App() {
+            const [selectedTool, setSelectedTool] = useState(null);
+            const [searchQuery, setSearchQuery] = useState('');
+            const [favoriteToolIds, setFavoriteToolIds] = useState(() => {
+                try {
+                    const saved = localStorage.getItem('hackingToolsFavorites');
+                    const parsed = saved ? JSON.parse(saved) : [];
+                    return Array.isArray(parsed) ? parsed : [];
+                } catch (e) { // Corrected catch syntax
+                    console.error("Error loading favorites:", e);
+                    return [];
+                }
+            });
+            const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+
+            useEffect(() => {
+                try {
+                    localStorage.setItem('hackingToolsFavorites', JSON.stringify(favoriteToolIds));
+                } catch (e) { console.error("Failed to save favorites:", e); }
+            }, [favoriteToolIds]);
+
+            const handleSelectTool = useCallback((tool) => { setSelectedTool(tool); window.scrollTo(0, 0); }, []);
+            const handleGoBack = useCallback(() => setSelectedTool(null), []);
+            const handleSearchChange = useCallback((e) => setSearchQuery(e.target.value), []);
+            const clearSearch = useCallback(() => setSearchQuery(''), []);
+            const toggleFavorite = useCallback((toolId, event) => {
+                event.stopPropagation();
+                setFavoriteToolIds(ids => ids.includes(toolId) ? ids.filter(id => id !== toolId) : [...ids, toolId]);
+            }, []);
+            const toggleShowFavorites = useCallback(() => setShowFavoritesOnly(show => !show), []);
+
+            const filteredTools = useMemo(() => {
+                const query = searchQuery.toLowerCase().trim();
+                return toolsData.filter(tool => {
+                    if (!tool || typeof tool.name !== 'string' || typeof tool.category !== 'string') return false;
+                    const nameMatch = tool.name.toLowerCase().includes(query);
+                    const categoryMatch = tool.category.toLowerCase().includes(query);
+                    const tagsMatch = query && Array.isArray(tool.tags) ? tool.tags.some(tag => tag.toLowerCase().includes(query)) : false;
+                    const matchesSearch = query === '' || nameMatch || categoryMatch || tagsMatch;
+                    const matchesFavorite = !showFavoritesOnly || favoriteToolIds.includes(tool.id);
+                    return matchesSearch && matchesFavorite;
+                });
+            }, [searchQuery, favoriteToolIds, showFavoritesOnly]);
+
+            const groupedFilteredTools = useMemo(() => groupToolsByCategory(filteredTools), [filteredTools]);
+
+            return (
+                <React.Fragment>
+                    <Header />
+                    <main className="app-container">
+                        {selectedTool ? (
+                            <ToolDetailView tool={selectedTool} onGoBack={handleGoBack} isFavorite={favoriteToolIds.includes(selectedTool.id)} onToggleFavorite={toggleFavorite} />
+                        ) : (
+                             <React.Fragment>
+                                <DashboardControls searchQuery={searchQuery} onSearchChange={handleSearchChange} onClearSearch={clearSearch} showFavoritesOnly={showFavoritesOnly} onToggleShowFavorites={toggleShowFavorites} hasFavorites={favoriteToolIds.length > 0} />
+                                <Dashboard groupedTools={groupedFilteredTools} onSelectTool={handleSelectTool} favoriteToolIds={favoriteToolIds} onToggleFavorite={toggleFavorite} />
+                             </React.Fragment>
+                        )}
+                    </main>
+                    <Footer />
+                </React.Fragment>
+            );
+        }
+
+        function Header() { return ( <header className="app-header"><h1><i className="fa-solid fa-shield-halved"></i> Hacking 2ools Dashboard</h1></header> ); }
+
+        function DashboardControls({ searchQuery, onSearchChange, onClearSearch, showFavoritesOnly, onToggleShowFavorites, hasFavorites }) {
+            return (
+                <div className="controls-container">
+                    <div className="search-box">
+                        <i className="fas fa-search search-icon"></i>
+                        <input type="text" placeholder="Search tools (name, category, tag...)" value={searchQuery} onChange={onSearchChange} aria-label="Search tools" />
+                        <button className="clear-button" onClick={onClearSearch} aria-label="Clear search" title="Clear search" style={{ display: searchQuery ? 'block' : 'none' }}>×</button>
+                    </div>
+                    <div className="filter-toggle">
+                        {hasFavorites && (<button onClick={onToggleShowFavorites} className={showFavoritesOnly ? 'active' : ''} aria-pressed={showFavoritesOnly}><i className={`fa-star ${showFavoritesOnly ? 'fas' : 'far'}`}></i>{showFavoritesOnly ? 'Show All' : 'Favorites'}</button>)}
+                    </div>
+                </div>
+            );
+        }
+
+        function Dashboard({ groupedTools, onSelectTool, favoriteToolIds, onToggleFavorite }) {
+            const categories = Object.keys(groupedTools).sort();
+            if (categories.length === 0) return <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '1.1rem', marginTop: '3rem' }}>No tools match your current search or filters.</p>;
+            return (
+                <div>{categories.map(category => (
+                    <div key={category} className="category-section">
+                        <h2 className="category-header">{category}</h2>
+                        <div className="dashboard-grid">{Array.isArray(groupedTools[category]) && groupedTools[category].map(tool => (
+                            <ToolCard key={tool.id} tool={tool} onSelectTool={onSelectTool} isFavorite={favoriteToolIds.includes(tool.id)} onToggleFavorite={onToggleFavorite} />
+                        ))}</div>
+                    </div>
+                ))}</div>
+            );
+        }
+
+        function ToolCard({ tool, onSelectTool, isFavorite, onToggleFavorite }) {
+            const difficulty = tool.difficulty || 'Unknown';
+            const difficultyClass = `difficulty-tag-${difficulty}`;
+            const description = tool.description || 'No description provided.';
+            const tags = Array.isArray(tool.tags) ? tool.tags : [];
+
+            return (
+                <div className="tool-card">
+                    <button className={`favorite-button ${isFavorite ? 'favorited' : ''}`} onClick={(e) => onToggleFavorite(tool.id, e)} aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'} title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}><i className={`${isFavorite ? 'fas' : 'far'} fa-star`}></i></button>
+                    <div className="tool-card-content" onClick={() => onSelectTool(tool)}>
+                        <h3><i className={tool.icon || 'fas fa-toolbox'}></i>{tool.name || 'Unnamed Tool'}</h3>
+                        <p className="tool-card-description">{description}</p>
+                    </div>
+                    <div className="tool-card-footer">
+                        <div className="card-tags-container">
+                            <span className={`tag category-tag`}>{tool.category || 'General'}</span>
+                            <span className={`tag ${difficultyClass}`}>{difficulty}</span>
+                            {tags.length > 0 && <span className="tag keyword-tag">{tags[0]}</span>}
+                            {tags.length > 1 && <span className="tag keyword-tag" style={{opacity: 0.7}}>...</span>}
+                        </div>
+                        <div className="platforms-list">
+                            {Array.isArray(tool.platforms) && tool.platforms.map(platform => (platformIcons[platform] && <i key={platform} className={`${platformIcons[platform]} platform-icon`} title={platform} aria-label={platform}></i>))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // This component should now be SAFE from the previous JSX parsing errors
+        function ToolDetailView({ tool, onGoBack, isFavorite, onToggleFavorite }) {
+            const difficulty = tool.difficulty || 'Unknown';
+            const difficultyClass = `difficulty-tag-${difficulty}`;
+            const toolName = tool.name || 'Selected Tool';
+            const description = tool.description || 'No description provided.';
+            const tags = Array.isArray(tool.tags) ? tool.tags : [];
+            const platforms = Array.isArray(tool.platforms) ? tool.platforms : [];
+            const website = typeof tool.website === 'string' ? tool.website : null;
+
+            // Generate safe HTML string for example tags display
+            const exampleTagsHTMLString = ["<h4>", "<p>", "<ul>", "<pre><code>", "<a>"].map(tag => `<code>${tag.replace(/</g, '<').replace(/>/g, '>')}</code>`).join(', ');
+
+            return (
+                <div className="tool-detail-view">
+                    <div className="tool-detail-header">
+                        <div className="tool-detail-title-meta">
+                            <h2><i className={tool.icon || 'fas fa-toolbox'}></i>{toolName}</h2>
+                            <p className="tool-detail-description">{description}</p>
+                            <div className="tool-meta">
+                                <div className="tags-row">
+                                    <span className="tags-label">Info:</span>
+                                    <span className={`tag category-tag`}>{tool.category || 'General'}</span>
+                                    <span className={`tag ${difficultyClass}`}>{difficulty}</span>
+                                </div>
+                                {platforms.length > 0 && (<div className="tags-row"><span className="tags-label">Platforms:</span>{platforms.map(platform => (platformIcons[platform] && <span key={platform} className="tag platform-tag"><i className={platformIcons[platform]}></i>{platform}</span> ))}</div>)}
+                                {tags.length > 0 && (<div className="tags-row"><span className="tags-label">Tags:</span>{tags.map(tag => (<span key={tag} className="tag keyword-tag">{tag}</span>))}</div>)}
+                                {website && (<div className="website-link"><a href={website} target="_blank" rel="noopener noreferrer" title={`Visit ${toolName} website`}><i className="fas fa-external-link-alt"></i>Official Website</a></div>)}
+                            </div>
+                        </div>
+                        <div className="tool-detail-actions">
+                            <button className={`favorite-button ${isFavorite ? 'favorited' : ''}`} onClick={(e) => onToggleFavorite(tool.id, e)} aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'} title={isFavorite ? 'Remove from favorites' : 'Add to favorites'} style={{ position: 'relative', top: 0, right: 0 }}><i className={`${isFavorite ? 'fas' : 'far'} fa-star`}></i></button>
+                            <button className="back-button" onClick={onGoBack}><i className="fas fa-arrow-left"></i>Back</button>
+                        </div>
+                    </div>
+
+                    {/* --- Cheatsheet Placeholder --- */}
+                    <div className="cheatsheet-placeholder">
+                        <i className="fas fa-scroll placeholder-icon"></i>
+                        <h4>Cheatsheet Area for {toolName}</h4>
+                        <p>{'This is where your detailed cheatsheet content will appear. Edit the source code within the '}<code>{'ToolDetailView'}</code>{' component to add conditional rendering based on '}<code>{'tool.id'}</code>{'.'}</p>
+                        {/* Use dangerouslySetInnerHTML to render the safe HTML string */}
+                        <p>Use standard HTML tags like <span dangerouslySetInnerHTML={{ __html: exampleTagsHTMLString }} />.</p>
+                        <div className="info-box">
+                            <i className="fas fa-lightbulb"></i>
+                            <strong>{' Tip: '}</strong>
+                            {'Consider adding \'Copy\' buttons for code blocks and organizing content with clear headings ('}
+                             <code>{'<h4>'}</code>{', '}<code>{'<h5>'}</code>{') and lists ('}<code>{'<ul>'}</code>{', '}<code>{'<ol>'}</code>{').'}
+                        </div>
+                    </div>
+
+                    {/* --- Cheatsheet Content Logic Placeholder --- */}
+                    {/*
+                     ===========================================================
+                     === ADD YOUR CONDITIONAL CHEATSHEET CONTENT HERE ===
+                     Replace the <div className="cheatsheet-placeholder">...</div> above
+                     with your actual rendering logic. Example structure:
+
+                     {(() => {
+                         if (tool.id === 1) { // Nmap
+                             return (
+                                 <div>
+                                     <h4>Nmap Scan Types</h4>
+                                     <p>Basic TCP Connect Scan:</p>
+                                     <pre><code>nmap -sT target.com</code></pre>
+                                     <h4>OS Detection</h4>
+                                     <pre><code>nmap -O target.com</code></pre>
+                                 </div>
+                             );
+                         } else if (tool.id === 7) { // SQLMap
+                             return (
+                                 <div>
+                                    <h4>SQLMap Basic Usage</h4>
+                                    <p>Test a URL parameter:</p>
+                                    <pre><code>sqlmap -u "http://example.com/page.php?id=1" --dbs</code></pre>
+                                 </div>
+                             );
+                         } else { // Default placeholder for tools without specific content yet
+                             return (
+                                <div className="cheatsheet-placeholder">
+                                     <i className="fas fa-scroll placeholder-icon"></i>
+                                     <h4>Cheatsheet Area for {toolName}</h4>
+                                     <p>No specific cheatsheet added for this tool yet.</p>
+                                 </div>
+                             );
+                         }
+                     })()}
+                     ===========================================================
+                    */}
+                </div>
+            );
+        }
+
+
+        function Footer() { return ( <footer className="app-footer">Disclaimer: For educational purposes only. Use tools responsibly & ethically. Always obtain permission.</footer> ); }
+
+        // --- Render App ---
+        try {
+            const root = ReactDOM.createRoot(document.getElementById('root'));
+            root.render(<App />);
+        } catch (error) {
+            console.error("Fatal React error:", error);
+            const rootElement = document.getElementById('root');
+            if (rootElement) { rootElement.innerHTML = '<div style="padding: 30px; margin: 20px; text-align: center; color: #F87171; background-color: #1F2937; border: 1px solid #4B5563; border-radius: 8px;"><h3>Application Error</h3><p>Failed to load the dashboard. Please check the browser console for technical details.</p></div>'; }
+        }
+    </script>
+
+</body>
+</html>
