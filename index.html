@@ -96,6 +96,8 @@
             transition: color var(--transition-speed); display: none;
         }
         .search-box .clear-button:hover { color: var(--text-primary); }
+        .search-box input:not(:placeholder-shown) + .clear-button { display: block; }
+
         .filter-toggle button {
             padding: 0.6rem 1.1rem; font-size: 0.9rem; font-weight: 500; border: 1px solid var(--border-color);
             border-radius: var(--border-radius-md); background-color: var(--bg-secondary); color: var(--text-secondary);
@@ -185,21 +187,34 @@
         .back-button:hover { background-color: var(--bg-hover); border-color: var(--border-color-light); transform: translateY(-1px); }
         .back-button:active { transform: translateY(0px); }
 
-        /* Cheatsheet Placeholder */
-        .cheatsheet-placeholder { background-color: var(--bg-code-placeholder); border: 1px solid var(--border-color); padding: 2.5rem 3rem; border-radius: var(--border-radius-md); min-height: 400px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: var(--text-secondary); font-family: 'Fira Code', monospace; margin-top: 2.5rem; line-height: 1.7; }
-        .cheatsheet-placeholder h4 { color: var(--text-heading); margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.3rem; font-weight: 600; }
-        .cheatsheet-placeholder p { max-width: 680px; font-size: 0.95rem; margin-bottom: 1.25rem; }
+        /* Cheatsheet Placeholder & Content Styling */
+        .cheatsheet-placeholder, .cheatsheet-content { margin-top: 2.5rem; border: 1px solid var(--border-color); padding: 2.5rem 3rem; border-radius: var(--border-radius-md); }
+        .cheatsheet-placeholder { background-color: var(--bg-code-placeholder); min-height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: var(--text-secondary); font-family: 'Fira Code', monospace; line-height: 1.7; }
+        .cheatsheet-placeholder h4 { color: var(--text-heading); margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.3rem; font-weight: 600; font-family: 'Inter', sans-serif; }
+        .cheatsheet-placeholder p { max-width: 680px; font-size: 0.95rem; margin-bottom: 1.25rem; font-family: 'Inter', sans-serif; }
         .cheatsheet-placeholder p:last-of-type { margin-bottom: 0; }
         .cheatsheet-placeholder i.placeholder-icon { font-size: 3rem; color: var(--accent-blue); opacity: 0.6; }
-        .cheatsheet-placeholder code { background-color: rgba(156, 163, 175, 0.1); padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.9em; color: var(--text-primary); border: 1px solid var(--border-color); }
-        .cheatsheet-placeholder .info-box { margin-top: 2rem; padding: 1rem 1.5rem; background-color: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--border-radius-md); font-size: 0.9rem; color: var(--accent-green); text-align: left; }
+        .cheatsheet-placeholder code, .cheatsheet-content code { background-color: rgba(156, 163, 175, 0.1); padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.9em; color: var(--text-primary); border: 1px solid var(--border-color); font-family: 'Fira Code', monospace; }
+        .cheatsheet-placeholder .info-box { margin-top: 2rem; padding: 1rem 1.5rem; background-color: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--border-radius-md); font-size: 0.9rem; color: var(--accent-green); text-align: left; font-family: 'Inter', sans-serif; }
         .cheatsheet-placeholder .info-box i { margin-right: 0.6rem; }
+        .cheatsheet-placeholder .info-box strong { font-weight: 600; }
+
+        /* Specific styles for actual cheatsheet content */
+        .cheatsheet-content { background-color: var(--bg-primary); /* Slightly different bg maybe */ text-align: left; }
+        .cheatsheet-content h4 { font-size: 1.4rem; color: var(--accent-blue-light); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-top: 1.8rem; margin-bottom: 1rem; font-weight: 600; }
+        .cheatsheet-content h4:first-of-type { margin-top: 0; }
+        .cheatsheet-content p { margin-bottom: 0.75rem; color: var(--text-primary); line-height: 1.7; }
+        .cheatsheet-content p strong { color: var(--text-heading); font-weight: 500; }
+        .cheatsheet-content pre { background-color: var(--bg-code-placeholder); padding: 1rem 1.25rem; border-radius: var(--border-radius-md); margin-bottom: 1.25rem; overflow-x: auto; border: 1px solid var(--border-color); }
+        .cheatsheet-content pre code { background: none; border: none; padding: 0; font-size: 0.9rem; color: var(--text-primary); }
+        .cheatsheet-content ul, .cheatsheet-content ol { margin-left: 1.5rem; margin-bottom: 1rem; }
+        .cheatsheet-content li { margin-bottom: 0.5rem; }
 
         /* --- Responsive --- */
         @media (max-width: 1200px) { .app-container { padding: 2rem; } }
-        @media (max-width: 992px) { html { font-size: 15px; } .app-header h1 { font-size: 1.8rem; } .dashboard-grid { grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.5rem;} .category-header { font-size: 1.6rem; } .tool-detail-header h2 { font-size: 1.8rem; } .tool-detail-view { padding: 2rem; } }
-        @media (max-width: 768px) { html { font-size: 14px; } .app-container { padding: 1.5rem 1rem; } .app-header { padding: 1rem 1.25rem; } .app-header h1 { font-size: 1.6rem; } .controls-container { flex-direction: column; align-items: stretch; gap: 1rem; } .search-box { width: 100%; } .filter-toggle { width: 100%; display: flex; justify-content: center; flex-wrap: wrap; gap: 0.6rem; } .filter-toggle button { margin-left: 0; } .dashboard-grid { grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1rem;} .tool-card h3 { font-size: 1.15rem; } .tool-detail-header { flex-direction: column; align-items: stretch; } .tool-detail-actions { justify-content: flex-start; width: 100%; margin-top: 0.5rem; } .tool-detail-header h2 { font-size: 1.6rem; } .tool-detail-view { padding: 1.5rem; } .cheatsheet-placeholder { padding: 2rem; } }
-        @media (max-width: 480px) { .app-header h1 { font-size: 1.5rem; } .dashboard-grid { grid-template-columns: 1fr; } .tool-card-content { padding: 1.25rem; } .tool-card-footer { padding: 0.75rem 1.25rem; } .tool-detail-header h2 { font-size: 1.5rem; } .tool-detail-description { font-size: 0.95rem;} .cheatsheet-placeholder { padding: 1.5rem; min-height: 300px; } .cheatsheet-placeholder i.placeholder-icon { font-size: 2.5rem; } .cheatsheet-placeholder h4 { font-size: 1.15rem; } .cheatsheet-placeholder p { font-size: 0.9rem; } }
+        @media (max-width: 992px) { html { font-size: 15px; } .app-header h1 { font-size: 1.8rem; } .dashboard-grid { grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.5rem;} .category-header { font-size: 1.6rem; } .tool-detail-header h2 { font-size: 1.8rem; } .tool-detail-view { padding: 2rem; } .cheatsheet-placeholder, .cheatsheet-content { padding: 2rem; } }
+        @media (max-width: 768px) { html { font-size: 14px; } .app-container { padding: 1.5rem 1rem; } .app-header { padding: 1rem 1.25rem; } .app-header h1 { font-size: 1.6rem; } .controls-container { flex-direction: column; align-items: stretch; gap: 1rem; } .search-box { width: 100%; } .filter-toggle { width: 100%; display: flex; justify-content: center; flex-wrap: wrap; gap: 0.6rem; } .filter-toggle button { margin-left: 0; } .dashboard-grid { grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1rem;} .tool-card h3 { font-size: 1.15rem; } .tool-detail-header { flex-direction: column; align-items: stretch; } .tool-detail-actions { justify-content: flex-start; width: 100%; margin-top: 0.5rem; } .tool-detail-header h2 { font-size: 1.6rem; } .tool-detail-view { padding: 1.5rem; } .cheatsheet-placeholder, .cheatsheet-content { padding: 1.5rem; } }
+        @media (max-width: 480px) { .app-header h1 { font-size: 1.5rem; } .dashboard-grid { grid-template-columns: 1fr; } .tool-card-content { padding: 1.25rem; } .tool-card-footer { padding: 0.75rem 1.25rem; } .tool-detail-header h2 { font-size: 1.5rem; } .tool-detail-description { font-size: 0.95rem;} .cheatsheet-placeholder { padding: 1.5rem; min-height: 250px; } .cheatsheet-placeholder i.placeholder-icon { font-size: 2.5rem; } .cheatsheet-placeholder h4 { font-size: 1.15rem; } .cheatsheet-placeholder p { font-size: 0.9rem; } .cheatsheet-content { padding: 1.25rem; } }
 
     </style>
 </head>
@@ -434,7 +449,7 @@
                     const saved = localStorage.getItem('hackingToolsFavorites');
                     const parsed = saved ? JSON.parse(saved) : [];
                     return Array.isArray(parsed) ? parsed : [];
-                } catch (e) { // Corrected catch syntax
+                } catch (e) {
                     console.error("Error loading favorites:", e);
                     return [];
                 }
@@ -498,7 +513,7 @@
                     <div className="search-box">
                         <i className="fas fa-search search-icon"></i>
                         <input type="text" placeholder="Search tools (name, category, tag...)" value={searchQuery} onChange={onSearchChange} aria-label="Search tools" />
-                        <button className="clear-button" onClick={onClearSearch} aria-label="Clear search" title="Clear search" style={{ display: searchQuery ? 'block' : 'none' }}>×</button>
+                        <button className="clear-button" onClick={onClearSearch} aria-label="Clear search" title="Clear search">×</button>
                     </div>
                     <div className="filter-toggle">
                         {hasFavorites && (<button onClick={onToggleShowFavorites} className={showFavoritesOnly ? 'active' : ''} aria-pressed={showFavoritesOnly}><i className={`fa-star ${showFavoritesOnly ? 'fas' : 'far'}`}></i>{showFavoritesOnly ? 'Show All' : 'Favorites'}</button>)}
@@ -509,14 +524,16 @@
 
         function Dashboard({ groupedTools, onSelectTool, favoriteToolIds, onToggleFavorite }) {
             const categories = Object.keys(groupedTools).sort();
-            if (categories.length === 0) return <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '1.1rem', marginTop: '3rem' }}>No tools match your current search or filters.</p>;
+            if (categories.length === 0) {
+                 return <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '1.1rem', marginTop: '3rem' }}>No tools match your current search or filters.</p>;
+            }
             return (
                 <div>{categories.map(category => (
                     <div key={category} className="category-section">
                         <h2 className="category-header">{category}</h2>
-                        <div className="dashboard-grid">{Array.isArray(groupedTools[category]) && groupedTools[category].map(tool => (
+                        <ul className="dashboard-grid">{Array.isArray(groupedTools[category]) && groupedTools[category].map(tool => (
                             <ToolCard key={tool.id} tool={tool} onSelectTool={onSelectTool} isFavorite={favoriteToolIds.includes(tool.id)} onToggleFavorite={onToggleFavorite} />
-                        ))}</div>
+                        ))}</ul>
                     </div>
                 ))}</div>
             );
@@ -529,9 +546,9 @@
             const tags = Array.isArray(tool.tags) ? tool.tags : [];
 
             return (
-                <div className="tool-card">
+                <li className="tool-card">
                     <button className={`favorite-button ${isFavorite ? 'favorited' : ''}`} onClick={(e) => onToggleFavorite(tool.id, e)} aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'} title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}><i className={`${isFavorite ? 'fas' : 'far'} fa-star`}></i></button>
-                    <div className="tool-card-content" onClick={() => onSelectTool(tool)}>
+                    <div className="tool-card-content" onClick={() => onSelectTool(tool)} role="button" tabIndex="0" onKeyPress={(e) => e.key === 'Enter' && onSelectTool(tool)}>
                         <h3><i className={tool.icon || 'fas fa-toolbox'}></i>{tool.name || 'Unnamed Tool'}</h3>
                         <p className="tool-card-description">{description}</p>
                     </div>
@@ -540,17 +557,17 @@
                             <span className={`tag category-tag`}>{tool.category || 'General'}</span>
                             <span className={`tag ${difficultyClass}`}>{difficulty}</span>
                             {tags.length > 0 && <span className="tag keyword-tag">{tags[0]}</span>}
-                            {tags.length > 1 && <span className="tag keyword-tag" style={{opacity: 0.7}}>...</span>}
+                            {tags.length > 1 && <span className="tag keyword-tag" title={tags.slice(1).join(', ')} style={{opacity: 0.7}}>...</span>}
                         </div>
                         <div className="platforms-list">
                             {Array.isArray(tool.platforms) && tool.platforms.map(platform => (platformIcons[platform] && <i key={platform} className={`${platformIcons[platform]} platform-icon`} title={platform} aria-label={platform}></i>))}
                         </div>
                     </div>
-                </div>
+                </li>
             );
         }
 
-        // This component should now be SAFE from the previous JSX parsing errors
+        // *** MODIFIED ToolDetailView ***
         function ToolDetailView({ tool, onGoBack, isFavorite, onToggleFavorite }) {
             const difficulty = tool.difficulty || 'Unknown';
             const difficultyClass = `difficulty-tag-${difficulty}`;
@@ -560,13 +577,31 @@
             const platforms = Array.isArray(tool.platforms) ? tool.platforms : [];
             const website = typeof tool.website === 'string' ? tool.website : null;
 
-            // Generate safe HTML string for example tags display
+            // Generate a SAFE HTML string for displaying example tags inside the placeholder's <p>
             const exampleTagsHTMLString = ["<h4>", "<p>", "<ul>", "<pre><code>", "<a>"].map(tag => `<code>${tag.replace(/</g, '<').replace(/>/g, '>')}</code>`).join(', ');
+
+            // --- Helper function to render the placeholder ---
+            const renderPlaceholder = (currentTool) => {
+                 return (
+                    <div className="cheatsheet-placeholder">
+                        <i className="fas fa-scroll placeholder-icon"></i>
+                        <h4>Cheatsheet Area for {currentTool.name || 'this tool'}</h4>
+                        <p>This is where your detailed cheatsheet content will appear. Edit the source code within the <code>{'<ToolDetailView>'}</code> component to add content for Tool ID <code>{currentTool.id}</code>.</p>
+                        <p>Use standard HTML tags like <span dangerouslySetInnerHTML={{ __html: exampleTagsHTMLString }} /> etc.</p>
+                         <div className="info-box">
+                             <i className="fas fa-lightbulb"></i>
+                             <strong>Tip:</strong>
+                             {' Find the '}<code>{'else if (tool.id === ' + currentTool.id + ')'}</code>{' block inside the IIFE and replace this placeholder div with your actual cheatsheet content (JSX).'}
+                         </div>
+                    </div>
+                 );
+            };
 
             return (
                 <div className="tool-detail-view">
+                    {/* --- Tool Header Section (Unchanged) --- */}
                     <div className="tool-detail-header">
-                        <div className="tool-detail-title-meta">
+                         <div className="tool-detail-title-meta">
                             <h2><i className={tool.icon || 'fas fa-toolbox'}></i>{toolName}</h2>
                             <p className="tool-detail-description">{description}</p>
                             <div className="tool-meta">
@@ -575,71 +610,161 @@
                                     <span className={`tag category-tag`}>{tool.category || 'General'}</span>
                                     <span className={`tag ${difficultyClass}`}>{difficulty}</span>
                                 </div>
-                                {platforms.length > 0 && (<div className="tags-row"><span className="tags-label">Platforms:</span>{platforms.map(platform => (platformIcons[platform] && <span key={platform} className="tag platform-tag"><i className={platformIcons[platform]}></i>{platform}</span> ))}</div>)}
-                                {tags.length > 0 && (<div className="tags-row"><span className="tags-label">Tags:</span>{tags.map(tag => (<span key={tag} className="tag keyword-tag">{tag}</span>))}</div>)}
-                                {website && (<div className="website-link"><a href={website} target="_blank" rel="noopener noreferrer" title={`Visit ${toolName} website`}><i className="fas fa-external-link-alt"></i>Official Website</a></div>)}
+                                {platforms.length > 0 && (
+                                    <div className="tags-row">
+                                        <span className="tags-label">Platforms:</span>
+                                        {platforms.map(platform => (platformIcons[platform] && <span key={platform} className="tag platform-tag"><i className={platformIcons[platform]}></i>{platform}</span> ))}
+                                    </div>
+                                )}
+                                {tags.length > 0 && (
+                                    <div className="tags-row">
+                                        <span className="tags-label">Tags:</span>
+                                        {tags.map(tag => (<span key={tag} className="tag keyword-tag">{tag}</span>))}
+                                    </div>
+                                )}
+                                {website && (
+                                    <div className="website-link">
+                                        <a href={website} target="_blank" rel="noopener noreferrer" title={`Visit ${toolName} website`}>
+                                            <i className="fas fa-external-link-alt"></i>Official Website
+                                        </a>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="tool-detail-actions">
-                            <button className={`favorite-button ${isFavorite ? 'favorited' : ''}`} onClick={(e) => onToggleFavorite(tool.id, e)} aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'} title={isFavorite ? 'Remove from favorites' : 'Add to favorites'} style={{ position: 'relative', top: 0, right: 0 }}><i className={`${isFavorite ? 'fas' : 'far'} fa-star`}></i></button>
-                            <button className="back-button" onClick={onGoBack}><i className="fas fa-arrow-left"></i>Back</button>
+                            <button className={`favorite-button ${isFavorite ? 'favorited' : ''}`} onClick={(e) => onToggleFavorite(tool.id, e)} aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'} title={isFavorite ? 'Remove from favorites' : 'Add to favorites'} style={{ position: 'relative', top: 0, right: 0, fontSize: '1.25rem' }}>
+                                <i className={`${isFavorite ? 'fas' : 'far'} fa-star`}></i>
+                            </button>
+                            <button className="back-button" onClick={onGoBack}>
+                                <i className="fas fa-arrow-left"></i>Back to Dashboard
+                            </button>
                         </div>
                     </div>
+                    {/* --- End of Tool Header Section --- */}
 
-                    {/* --- Cheatsheet Placeholder --- */}
-                    <div className="cheatsheet-placeholder">
-                        <i className="fas fa-scroll placeholder-icon"></i>
-                        <h4>Cheatsheet Area for {toolName}</h4>
-                        <p>{'This is where your detailed cheatsheet content will appear. Edit the source code within the '}<code>{'ToolDetailView'}</code>{' component to add conditional rendering based on '}<code>{'tool.id'}</code>{'.'}</p>
-                        {/* Use dangerouslySetInnerHTML to render the safe HTML string */}
-                        <p>Use standard HTML tags like <span dangerouslySetInnerHTML={{ __html: exampleTagsHTMLString }} />.</p>
-                        <div className="info-box">
-                            <i className="fas fa-lightbulb"></i>
-                            <strong>{' Tip: '}</strong>
-                            {'Consider adding \'Copy\' buttons for code blocks and organizing content with clear headings ('}
-                             <code>{'<h4>'}</code>{', '}<code>{'<h5>'}</code>{') and lists ('}<code>{'<ul>'}</code>{', '}<code>{'<ol>'}</code>{').'}
-                        </div>
-                    </div>
 
-                    {/* --- Cheatsheet Content Logic Placeholder --- */}
-                    {/*
-                     ===========================================================
-                     === ADD YOUR CONDITIONAL CHEATSHEET CONTENT HERE ===
-                     Replace the <div className="cheatsheet-placeholder">...</div> above
-                     with your actual rendering logic. Example structure:
+                    {/* --- Conditionally Rendered Cheatsheet Area --- */}
+                    {(() => {
+                        // --- Network Scanning & Analysis ---
+                        if (tool.id === 1) { return renderPlaceholder(tool); } // Nmap
+                        else if (tool.id === 2) { return renderPlaceholder(tool); } // Wireshark
+                        else if (tool.id === 3) { return renderPlaceholder(tool); } // Masscan
+                        else if (tool.id === 4) { return renderPlaceholder(tool); } // Tcpdump
+                        else if (tool.id === 36) { return renderPlaceholder(tool); } // Angry IP Scanner
+                        else if (tool.id === 37) { return renderPlaceholder(tool); } // Netcat
+                        else if (tool.id === 48) { return renderPlaceholder(tool); } // Zmap
+                        else if (tool.id === 49) { return renderPlaceholder(tool); } // RustScan
+                        else if (tool.id === 72) { return renderPlaceholder(tool); } // Hping3
 
-                     {(() => {
-                         if (tool.id === 1) { // Nmap
-                             return (
-                                 <div>
-                                     <h4>Nmap Scan Types</h4>
-                                     <p>Basic TCP Connect Scan:</p>
-                                     <pre><code>nmap -sT target.com</code></pre>
-                                     <h4>OS Detection</h4>
-                                     <pre><code>nmap -O target.com</code></pre>
-                                 </div>
-                             );
-                         } else if (tool.id === 7) { // SQLMap
-                             return (
-                                 <div>
-                                    <h4>SQLMap Basic Usage</h4>
-                                    <p>Test a URL parameter:</p>
-                                    <pre><code>sqlmap -u "http://example.com/page.php?id=1" --dbs</code></pre>
-                                 </div>
-                             );
-                         } else { // Default placeholder for tools without specific content yet
-                             return (
+                        // --- Vulnerability Analysis & Exploitation ---
+                        else if (tool.id === 5) { return renderPlaceholder(tool); } // Metasploit Framework
+                        else if (tool.id === 7) { return renderPlaceholder(tool); } // SQLMap
+                        else if (tool.id === 8) { return renderPlaceholder(tool); } // Nessus Essentials
+                        else if (tool.id === 50) { return renderPlaceholder(tool); } // OpenVAS / GVM
+                        else if (tool.id === 9) { return renderPlaceholder(tool); } // Nikto
+                        else if (tool.id === 39) { return renderPlaceholder(tool); } // Hydra
+                        else if (tool.id === 40) { return renderPlaceholder(tool); } // Exploit-DB
+                        else if (tool.id === 51) { return renderPlaceholder(tool); } // SearchSploit
+                        else if (tool.id === 73) { return renderPlaceholder(tool); } // CrackMapExec
+
+                        // --- Web Application Security ---
+                        else if (tool.id === 6) { return renderPlaceholder(tool); } // Burp Suite
+                        else if (tool.id === 38) { return renderPlaceholder(tool); } // OWASP ZAP
+                        else if (tool.id === 16) { return renderPlaceholder(tool); } // Dirb / Dirbuster
+                        else if (tool.id === 17) { return renderPlaceholder(tool); } // Gobuster
+                        else if (tool.id === 18) { return renderPlaceholder(tool); } // Wfuzz
+                        else if (tool.id === 52) { return renderPlaceholder(tool); } // ffuf
+                        else if (tool.id === 43) { return renderPlaceholder(tool); } // WhatWeb
+                        else if (tool.id === 53) { return renderPlaceholder(tool); } // Arachni
+                        else if (tool.id === 54) { return renderPlaceholder(tool); } // Commix
+                        else if (tool.id === 74) { return renderPlaceholder(tool); } // XSStrike
+
+                        // --- Wireless Hacking ---
+                        else if (tool.id === 10) { return renderPlaceholder(tool); } // Aircrack-ng Suite
+                        else if (tool.id === 11) { return renderPlaceholder(tool); } // Reaver
+                        else if (tool.id === 12) { return renderPlaceholder(tool); } // Kismet
+                        else if (tool.id === 41) { return renderPlaceholder(tool); } // Wifite2
+                        else if (tool.id === 55) { return renderPlaceholder(tool); } // Fern Wifi Cracker
+                        else if (tool.id === 56) { return renderPlaceholder(tool); } // Bettercap
+                        else if (tool.id === 75) { return renderPlaceholder(tool); } // Fluxion
+
+                        // --- Password Attacks ---
+                        else if (tool.id === 13) { return renderPlaceholder(tool); } // John the Ripper
+                        else if (tool.id === 14) { return renderPlaceholder(tool); } // Hashcat
+                        else if (tool.id === 15) { return renderPlaceholder(tool); } // Cain & Abel
+                        else if (tool.id === 42) { return renderPlaceholder(tool); } // Mimikatz
+                        else if (tool.id === 57) { return renderPlaceholder(tool); } // CeWL
+                        else if (tool.id === 58) { return renderPlaceholder(tool); } // Medusa
+                        else if (tool.id === 76) { return renderPlaceholder(tool); } // Patator
+
+                        // --- Forensics & Reverse Engineering ---
+                        else if (tool.id === 19) { return renderPlaceholder(tool); } // Volatility Framework
+                        else if (tool.id === 20) { return renderPlaceholder(tool); } // Autopsy / Sleuth Kit
+                        else if (tool.id === 21) { return renderPlaceholder(tool); } // Ghidra
+                        else if (tool.id === 22) { return renderPlaceholder(tool); } // Binwalk
+                        else if (tool.id === 44) { return renderPlaceholder(tool); } // Strings
+                        else if (tool.id === 59) { return renderPlaceholder(tool); } // Radare2
+                        else if (tool.id === 60) { return renderPlaceholder(tool); } // ExifTool
+                        else if (tool.id === 77) { return renderPlaceholder(tool); } // Cutter
+
+                         // --- Information Gathering / OSINT ---
+                        else if (tool.id === 23) { return renderPlaceholder(tool); } // theHarvester
+                        else if (tool.id === 24) { return renderPlaceholder(tool); } // Sublist3r
+                        else if (tool.id === 61) { return renderPlaceholder(tool); } // Amass
+                        else if (tool.id === 25) { return renderPlaceholder(tool); } // Maltego
+                        else if (tool.id === 26) { return renderPlaceholder(tool); } // Recon-ng
+                        else if (tool.id === 45) { return renderPlaceholder(tool); } // Shodan
+                        else if (tool.id === 46) { return renderPlaceholder(tool); } // WHOIS
+                        else if (tool.id === 62) { return renderPlaceholder(tool); } // SpiderFoot
+                        else if (tool.id === 78) { return renderPlaceholder(tool); } // Photon
+
+                        // --- Post-Exploitation & C2 ---
+                        else if (tool.id === 27) { return renderPlaceholder(tool); } // Meterpreter
+                        else if (tool.id === 28) { return renderPlaceholder(tool); } // Empire / Starkiller
+                        else if (tool.id === 29) { return renderPlaceholder(tool); } // Cobalt Strike
+                        else if (tool.id === 63) { return renderPlaceholder(tool); } // Pupy
+                        else if (tool.id === 64) { return renderPlaceholder(tool); } // PowerSploit
+                        else if (tool.id === 79) { return renderPlaceholder(tool); } // Covenant
+
+                         // --- Sniffing & Spoofing ---
+                        else if (tool.id === 31) { return renderPlaceholder(tool); } // Ettercap
+                        // Note: ID 56 (Bettercap) is already covered under Wireless
+                        else if (tool.id === 33) { return renderPlaceholder(tool); } // Scapy
+                        else if (tool.id === 47) { return renderPlaceholder(tool); } // Dsniff
+                        else if (tool.id === 65) { return renderPlaceholder(tool); } // Responder
+                        else if (tool.id === 80) { return renderPlaceholder(tool); } // MITMProxy
+
+                         // --- Cloud Security ---
+                        else if (tool.id === 66) { return renderPlaceholder(tool); } // Pacu
+                        else if (tool.id === 67) { return renderPlaceholder(tool); } // Scout Suite
+                        else if (tool.id === 68) { return renderPlaceholder(tool); } // Prowler
+                        else if (tool.id === 81) { return renderPlaceholder(tool); } // Cloud Custodian
+
+                         // --- Mobile Security ---
+                        else if (tool.id === 69) { return renderPlaceholder(tool); } // MobSF
+                        else if (tool.id === 70) { return renderPlaceholder(tool); } // Frida
+                        else if (tool.id === 71) { return renderPlaceholder(tool); } // Drozer
+                        else if (tool.id === 82) { return renderPlaceholder(tool); } // Objection
+
+                        // --- Reporting & Collaboration ---
+                        else if (tool.id === 34) { return renderPlaceholder(tool); } // Dradis Framework
+                        else if (tool.id === 35) { return renderPlaceholder(tool); } // MagicTree
+
+                        // --- Fallback Placeholder ---
+                        else {
+                            // This will be shown if a tool exists in toolsData but isn't listed above,
+                            // or if somehow a tool object without a listed ID is passed.
+                            return (
                                 <div className="cheatsheet-placeholder">
-                                     <i className="fas fa-scroll placeholder-icon"></i>
-                                     <h4>Cheatsheet Area for {toolName}</h4>
-                                     <p>No specific cheatsheet added for this tool yet.</p>
-                                 </div>
-                             );
-                         }
-                     })()}
-                     ===========================================================
-                    */}
-                </div>
+                                    <i className="fas fa-question-circle placeholder-icon"></i>
+                                    <h4>Cheatsheet Area for {toolName}</h4>
+                                    <p>A placeholder for this specific tool (ID: {tool.id}) was not explicitly defined in the conditional rendering logic.</p>
+                                </div>
+                            );
+                        }
+                    })()} {/* End of IIFE for conditional rendering */}
+
+                </div> // End of tool-detail-view
             );
         }
 
@@ -653,7 +778,7 @@
         } catch (error) {
             console.error("Fatal React error:", error);
             const rootElement = document.getElementById('root');
-            if (rootElement) { rootElement.innerHTML = '<div style="padding: 30px; margin: 20px; text-align: center; color: #F87171; background-color: #1F2937; border: 1px solid #4B5563; border-radius: 8px;"><h3>Application Error</h3><p>Failed to load the dashboard. Please check the browser console for technical details.</p></div>'; }
+            if (rootElement) { rootElement.innerHTML = '<div style="padding: 30px; margin: 20px; text-align: center; color: #F87171; background-color: #1F2937; border: 1px solid #4B5563; border-radius: 8px;"><h3>Application Error</h3><p>Failed to load the dashboard. Please check the browser console for technical details.</p><pre style="text-align: left; margin-top: 15px; font-size: 12px; color: #9CA3AF; max-height: 200px; overflow: auto;">' + error.stack + '</pre></div>'; }
         }
     </script>
 
